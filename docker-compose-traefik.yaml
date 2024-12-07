@@ -1,0 +1,44 @@
+
+services:
+  apache2:
+    build:
+      context: .
+      dockerfile: conf/apache2/Dockerfile
+    image: openxe:latest
+    container_name: openxe-web 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openxe-http.entrypoints=web"
+      - "traefik.http.routers.openxe-http.rule=(Host(`DOMAIN`))"
+      - "traefik.http.routers.openxe-https.entrypoints=websecure"
+      - "traefik.http.routers.openxe-https.rule=(Host(`DOMAIN`))"
+      - "traefik.http.routers.openxe-https.tls=true"
+      - "traefik.http.routers.openxe-https.tls.certresolver=production"
+      - "traefik.http.routers.openxe-https.middlewares=default-security-headers@file,gzip@file"
+      - "traefik.http.routers.openxe-https.tls.options=intermediate@file"
+    volumes:
+      - ./app:/var/www/html
+    depends_on:
+      - mariadb
+    links:
+      - mariadb
+    networks:
+      - backend
+      - frontend
+
+  # MariaDB Service
+  mariadb:
+    image: mariadb:10.8
+    container_name: openxe-db
+    env_file: "conf/openxe.env"
+    volumes:
+      - openxeDB:/var/lib/mysql
+    networks:
+      - backend
+
+volumes:
+  openxeDB:
+
+networks:
+  frontend:
+  backend:
