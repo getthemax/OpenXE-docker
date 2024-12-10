@@ -21,9 +21,9 @@ services:
     volumes:
       - ./app:/var/www/html
     depends_on:
-      - mariadb
+      - openxedb
     links:
-      - mariadb
+      - openxedb
     #networks:
     #  - backend
     #  - frontend
