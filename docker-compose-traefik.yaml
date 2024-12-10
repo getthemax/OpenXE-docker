@@ -28,7 +28,7 @@ services:
 
   # MariaDB Service
   mariadb:
-    image: mariadb:10.8
+    image: mariadb:10.11
     container_name: openxe-db
     env_file: "conf/openxe.env"
     volumes:
