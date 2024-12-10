@@ -19,10 +19,10 @@ chmod +x install.sh
 The user/group nobody nogroup are nessessary, due to the limits from bind mounts**
 
 **Possible Erros:**
-no user
+user not found
 create user nobody
 
-no group
+group not found
 create group nogroup for Debian based Distros, nobody for RedHat based distros
 
 Run install.sh again
