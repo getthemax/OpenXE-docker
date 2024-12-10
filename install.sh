@@ -17,7 +17,7 @@ mv OpenXE-${TAG} app
 rm ${TAG}.tar.gz
 
 # OS Check
-if hostnamectl status | grep -q "CentOS|Rocky|AlmaLinux"; then
+if hostnamectl | grep -iq "almalinux"; then
 
   if getent passwd "nobody" > /dev/null; then  
     echo "User nobody exists"
@@ -28,17 +28,31 @@ if hostnamectl status | grep -q "CentOS|Rocky|AlmaLinux"; then
     chown -R nobody:nobody app
   fi
 
-elif hostnamectl status | grep -q "Debian|Ubuntu"; then
+elif hostnamectl | grep -iq "Rocky Linux"; then
 
   if getent passwd "nobody" > /dev/null; then  
     echo "User nobody exists"
-    chown -R nobody:nogroup app
+    chown -R nobody:nobody app
   else
-    addgroup --gid 65534 nogroup
-    adduser --uid 65534 --gid 65534 --home /nonexistent --shell /usr/sbin/nologin --no-create-home nobody
-    chown -R nobody:nogroup app
+    addgroup --gid 65534 nobody
+    adduser --uid 65534 --gid 65534 --home /nonexistent --shell /sbin/nologin --no-create-home nobody
+    chown -R nobody:nobody app
   fi
 
+elif hostnamectl | grep -iq "Debian"; then
+
+  if getent passwd "nobody" > /dev/null; then  
+    echo "User nobody exists"
+    chown -R nobody:nobody app
+  else
+    addgroup --gid 65534 nobody
+    adduser --uid 65534 --gid 65534 --home /nonexistent --shell /sbin/nologin --no-create-home nobody
+    chown -R nobody:nobody app
+  fi
+
+else
+    echo "OS?"
+    exit 1
 fi
 
 ### thx dakhnod
