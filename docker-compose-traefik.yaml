@@ -1,6 +1,6 @@
 
 services:
-  apache2:
+  openxeweb:
     build:
       context: .
       dockerfile: conf/apache2/Dockerfile
@@ -27,7 +27,7 @@ services:
       - frontend
 
   # MariaDB Service
-  mariadb:
+  openxedb:
     image: mariadb:10.11
     container_name: openxe-db
     env_file: "conf/openxe.env"
