@@ -3,7 +3,12 @@
 #set -x
 
 TAG="V.1.12" ### OpenXE Version
+
+### do not change anything after this line
+
 DIR="app" ### OpenXE docroot, DO NOT CHANGE
+USER="65534" ### User ID, DO NOT CHANGE
+GROUP="65534" ### Group ID , DO NOT CHANGE
 
 ### check if app folder exists
 if [ -d "$DIR" ]; then
@@ -16,43 +21,18 @@ tar -xvf ${TAG}.tar.gz
 mv OpenXE-${TAG} app
 rm ${TAG}.tar.gz
 
-# OS Check
-if hostnamectl | grep -iq "almalinux"; then
-
-  if getent passwd "nobody" > /dev/null; then  
-    echo "User nobody exists"
-    chown -R nobody:nobody app
-  else
-    addgroup --gid 65534 nobody
-    adduser --uid 65534 --gid 65534 --home /nonexistent --shell /sbin/nologin --no-create-home nobody
-    chown -R nobody:nobody app
-  fi
-
-elif hostnamectl | grep -iq "Rocky Linux"; then
-
-  if getent passwd "nobody" > /dev/null; then  
-    echo "User nobody exists"
-    chown -R nobody:nobody app
-  else
-    addgroup --gid 65534 nobody
-    adduser --uid 65534 --gid 65534 --home /nonexistent --shell /sbin/nologin --no-create-home nobody
-    chown -R nobody:nobody app
-  fi
-
-elif hostnamectl | grep -iq "Debian"; then
-
-  if getent passwd "nobody" > /dev/null; then  
-    echo "User nobody exists"
-    chown -R nobody:nobody app
-  else
-    addgroup --gid 65534 nobody
-    adduser --uid 65534 --gid 65534 --home /nonexistent --shell /sbin/nologin --no-create-home nobody
-    chown -R nobody:nobody app
-  fi
-
+# user check
+if getent passwd | cut -d: -f3 | grep -q "^$USER$"; then
+  echo "found"                                            
 else
-    echo "OS?"
-    exit 1
+  echo "user not found"                                   
+fi
+
+# group check
+if getent group "$GROUP" >/dev/null 2>&1; then
+  echo "found"                                           
+else
+  echo "group not found"                                 
 fi
 
 ### thx dakhnod
