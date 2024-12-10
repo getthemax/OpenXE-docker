@@ -1,5 +1,9 @@
 # OpenXE-docker
 
+Quick way to run OpenXE within docker
+
+[OpenXE - Das freie ERP System](https://openxe.org/)
+
 ## Quick start
 
 ```bash
@@ -9,15 +13,20 @@ chmod +x install.sh
 ./install.sh
 ```
 
-### important
+### Important
 
-***install.sh will create user www-data if not exists, the script should work on Debian based distros
-The image currently is based on debian bookwork, therefore the user www-data is needed due to the limits from bind mounts***
+**install.sh checks if user/group nobody nogroup exists
+The user/group nobody nogroup are nessessary, due to the limits from bind mounts**
 
-SSL, i recommend Traefik or Nginx Proxy Manager, for Traefik use docker-compose-traefik.yaml, before you start adjust compose file according to your config
+**Possible Erros:**
+no user
+create user nobody
 
-This git uses [Bind mounts](https://docs.docker.com/engine/storage/bind-mounts/), the OpenXE "app" folder is mounted into the container, for better maintenance
+no group
+create group nogroup for Debian based Distros, nobody for RedHat based distros
 
-### Traefik
+Run install.sh again
 
-For traefik use docker-compose-traefik.yaml and adapt it according to your needs
+### SSL
+
+i recommend Traefik or Nginx Proxy Manager, for Traefik use docker-compose-traefik.yaml, before you start adjust compose file according to your config
