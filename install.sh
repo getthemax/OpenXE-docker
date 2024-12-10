@@ -35,7 +35,7 @@ else
   echo "group not found"                                 
 fi
 
-chown -R 65534:65534 app
+chown -R $USER:$GROUP app
 
 ### thx dakhnod
 sed -i 's/\$setup\[2\]\[\x27fields\x27\]\[\x27WFdbhost\x27\]\[\x27default\x27\] = ".*";/$setup[2]['\''fields'\'']['\''WFdbhost'\'']['\''default'\''] = "openxedb";/' app/www/setup/setup.conf.php 
