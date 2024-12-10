@@ -29,6 +29,10 @@ RUN sed -i 's/^ServerTokens OS/ServerTokens Prod/; s/^ServerSignature On/ServerS
 RUN sed -i '/DocumentRoot/a\\n        <Directory /var/www/html/www>\n          Options Indexes FollowSymLinks\n          AllowOverride All\n          Require all granted\n        </Directory>' /etc/apache2/sites-available/000-default.conf
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/www|' /etc/apache2/sites-available/000-default.conf
 
+### change apache2 user and group
+RUN sed -i 's|APACHE_RUN_USER:=www-data|APACHE_RUN_USER:=nobody|' /etc/apache2/envvars
+RUN sed -i 's|APACHE_RUN_GROUP:=www-data|APACHE_RUN_GROUP:=nogroup|' /etc/apache2/envvars
+
 # not working with bind mount
 #RUN chown -R www-data:www-data /var/www/html
 
@@ -51,7 +55,7 @@ COPY conf/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Cronjob
 #COPY conf/apache2/cron.txt /etc/cron.d/openxe
-RUN echo '* * * * * sudo -u www-data /usr/local/bin/php -d memory_limit=512M /var/www/html/cronjobs/starter2.php > /proc/1/fd/1 2>/proc/1/fd/2' > /etc/cron.d/openxe
+RUN echo '* * * * * sudo -u nobody /usr/local/bin/php -d memory_limit=512M /var/www/html/cronjobs/starter2.php > /proc/1/fd/1 2>/proc/1/fd/2' > /etc/cron.d/openxe
 RUN chmod 0644 /etc/cron.d/openxe
 RUN crontab /etc/cron.d/openxe
 RUN ln -s /dev/stdout /var/log/cron
