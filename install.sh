@@ -16,24 +16,27 @@ if [ -d "$DIR" ]; then
   exit 1
 fi
 
-wget https://github.com/OpenXE-org/OpenXE/archive/refs/tags/${TAG}.tar.gz
-tar -xvf ${TAG}.tar.gz
-mv OpenXE-${TAG} app
-rm ${TAG}.tar.gz
-
 # user check
 if getent passwd | cut -d: -f3 | grep -q "^$USER$"; then
-  echo "found"                                            
+  echo "found"
 else
-  echo "user not found"                                   
+  echo "user not found"
+  exit 1
 fi
 
 # group check
 if getent group "$GROUP" >/dev/null 2>&1; then
-  echo "found"                                           
+  echo "found"
 else
-  echo "group not found"                                 
+  echo "group not found"
+  exit 1
 fi
+
+# download openxe
+wget https://github.com/OpenXE-org/OpenXE/archive/refs/tags/${TAG}.tar.gz
+tar -xvf ${TAG}.tar.gz
+mv OpenXE-${TAG} app
+rm ${TAG}.tar.gz
 
 chown -R $USER:$GROUP app
 
