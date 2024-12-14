@@ -4,7 +4,7 @@ Quick way to run OpenXE within docker
 
 [OpenXE - Das freie ERP System](https://openxe.org/)
 
-## Quick start
+## Quick start stable version
 
 ```bash
 git clone https://github.com/getthemax/OpenXE-docker.git
@@ -12,6 +12,8 @@ cd OpenXE-docker
 chmod +x install.sh
 ./install.sh
 ```
+
+for the latest version, open install.sh and change the VERSION to git
 
 ### Important
 
