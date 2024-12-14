@@ -2,13 +2,14 @@
 
 #set -x
 
-TAG="V.1.12" ### OpenXE Version
+VERSION="git" ### git or stable
 
 ### do not change anything after this line
 
 DIR="app" ### OpenXE docroot, DO NOT CHANGE
 USER="65534" ### User ID, DO NOT CHANGE
 GROUP="65534" ### Group ID , DO NOT CHANGE
+REPO_URL="https://api.github.com/repos/OpenXE-org/OpenXE/releases/latest"
 
 ### check if app folder exists
 if [ -d "$DIR" ]; then
@@ -18,7 +19,7 @@ fi
 
 # user check
 if getent passwd | cut -d: -f3 | grep -q "^$USER$"; then
-  echo "found"
+  echo "user found"
 else
   echo "user not found"
   exit 1
@@ -26,17 +27,26 @@ fi
 
 # group check
 if getent group "$GROUP" >/dev/null 2>&1; then
-  echo "found"
+  echo "group found"
 else
   echo "group not found"
   exit 1
 fi
 
-# download openxe
-wget https://github.com/OpenXE-org/OpenXE/archive/refs/tags/${TAG}.tar.gz
-tar -xvf ${TAG}.tar.gz
-mv OpenXE-${TAG} app
-rm ${TAG}.tar.gz
+# download stable or git openxe
+if [ "$VERSION" == "git" ]; then
+  git clone https://github.com/OpenXE-org/OpenXE
+  mv OpenXE app
+else
+  # checkout latest stable                           
+  if curl -s "$REPO_URL" > /dev/null; then
+    VERSION=$(curl -s "$REPO_URL" | jq -r '.tag_name')
+    wget https://github.com/OpenXE-org/OpenXE/archive/refs/tags/${VERSION}.tar.gz
+    tar -xvf ${VERSION}.tar.gz
+    mv OpenXE-${VERSION} app
+    rm ${VERSION}.tar.gz
+  fi
+fi
 
 chown -R $USER:$GROUP app
 
