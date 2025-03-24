@@ -57,4 +57,10 @@ sed -i 's/\$setup\[2\]\[\x27fields\x27\]\[\x27WFdbuser\x27\]\[\x27default\x27\] 
 
 docker compose build --no-cache
 
-docker compose up
+docker compose up -d
+
+echo MariaDB credentials
+echo host: openxedb
+echo dbname: openxedb
+echo dbuser: openxe
+echo dbpass: openxe
